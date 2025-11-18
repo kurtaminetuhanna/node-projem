@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// ---------------------- SIGNUP ----------------------
+
 app.post("/signup", (req, res) => {
   const { isim, soyisim, email, telefon, sifre } = req.body;
 
@@ -70,3 +70,4 @@ app.post("/login", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Backend çalışıyor: http://localhost:${PORT} `); 
 });
+
