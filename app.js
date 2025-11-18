@@ -19,11 +19,11 @@ app.use(cors({
   allowedHeaders: ["Content-Type"]
 }));
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
+// ---------------------- SIGNUP ----------------------
 app.post("/signup", (req, res) => {
   const { isim, soyisim, email, telefon, sifre } = req.body;
 
@@ -41,11 +41,32 @@ app.post("/signup", (req, res) => {
   users.push(newUser);
   fs.writeFileSync(DATA_FILE, JSON.stringify(users, null, 2));
 
-  console.log(" Yeni kullanıcı kaydedildi:", newUser);
+  console.log("Yeni kullanıcı kaydedildi:", newUser);
   res.json({ message: "Kayıt başarılı!" });
 });
 
 
+app.post("/login", (req, res) => {
+  const { email, sifre } = req.body;
+
+  if (!email || !sifre) {
+    return res.status(400).json({ message: "E-posta ve şifre gerekli!" });
+  }
+
+  const users = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
+
+  const user = users.find(u => u.email === email && u.sifre === sifre);
+
+  if (!user) {
+    return res.status(401).json({ message: "E-posta veya şifre hatalı!" });
+  }
+
+  console.log("Giriş yapan kullanıcı:", user.email);
+
+  res.json({ message: "Giriş başarılı!", user });
+});
+
+
 app.listen(PORT, () => {
-  console.log(`Backend çalışıyor: http://localhost:${PORT}`);
+  console.log(`Backend çalışıyor: http://localhost:${PORT} `); 
 });
